@@ -3,6 +3,10 @@
 
 #include "fs.h"
 
+struct Super *super;
+uint32_t *bitmap;
+
+
 // --------------------------------------------------------------
 // Super block
 // --------------------------------------------------------------
@@ -62,7 +66,15 @@ alloc_block(void)
 	// super->s_nblocks blocks in the disk altogether.
 
 	// LAB 5: Your code here.
-	panic("alloc_block not implemented");
+	for (size_t i = 2; i < super->s_nblocks; ++i) {
+		if (block_is_free(i)) {
+			bitmap[i / 32] ^= (1 << (i % 32));
+			flush_block(diskaddr(i));
+			return i;
+		}
+	}
+
+//	panic("alloc_block not implemented");
 	return -E_NO_DISK;
 }
 
@@ -135,7 +147,35 @@ static int
 file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool alloc)
 {
        // LAB 5: Your code here.
-       panic("file_block_walk not implemented");
+	   int blockno = 0;
+	   uint32_t* indirect;
+		if (filebno >= NDIRECT + NINDIRECT)
+			return -E_INVAL;
+
+		if (filebno < NDIRECT) {
+			*ppdiskbno = &(f->f_direct[filebno]);
+		}
+		else {
+			if (f->f_indirect) {
+				indirect = diskaddr(f->f_indirect);
+				*ppdiskbno = &(indirect[filebno - NDIRECT]);
+			}
+			else {
+				if (!alloc)
+					return -E_NOT_FOUND;
+				blockno = alloc_block();
+				if (blockno < 0)
+					return blockno;
+				f->f_indirect = blockno;
+				flush_block(diskaddr(blockno));
+				indirect = diskaddr(blockno);
+				*ppdiskbno = &(indirect[filebno - NDIRECT]);
+			}
+		}
+
+		return 0;
+
+//      panic("file_block_walk not implemented");
 }
 
 // Set *blk to the address in memory where the filebno'th
@@ -150,7 +190,24 @@ int
 file_get_block(struct File *f, uint32_t filebno, char **blk)
 {
        // LAB 5: Your code here.
-       panic("file_get_block not implemented");
+		int r = 0;
+		uint32_t* ppdiskno;
+
+		r = file_block_walk(f, filebno, &ppdiskno, 1);
+		if (r < 0)
+			return r;
+		
+		if (0 == *ppdiskno) {
+			r = alloc_block();
+			if (r < 0)
+				return r;
+			*ppdiskno = r;
+			flush_block(diskaddr(r));
+		}
+		*blk = diskaddr(*ppdiskno);
+		return 0;
+
+//       panic("file_get_block not implemented");
 }
 
 // Try to find a file named "name" in dir.  If so, set *file to it.
