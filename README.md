@@ -27,3 +27,8 @@ https://pdos.csail.mit.edu/6.828/2018/index.html
 #### lab5
 [报错解决-csdn](https://blog.csdn.net/qq_32473685/article/details/99625128?spm=1001.2014.3001.5501](https://www.cnblogs.com/cindycindy/p/13523905.html#exercise-01)](https://blog.csdn.net/weixin_52877213/article/details/127109658)](https://blog.csdn.net/weixin_52877213/article/details/127109658))
 </br>
+[参考资料-csdn](https://jiyou.github.io/blog/2018/04/28/mit.6.828/jos-lab3/](https://blog.csdn.net/a747979985/article/details/99551678))
+</br>
+[参考资料-博客园](https://jiyou.github.io/blog/2018/04/28/mit.6.828/jos-lab3/](https://blog.csdn.net/a747979985/article/details/99551678)](https://www.cnblogs.com/cindycindy/p/13523974.html#mit-6828-lab5file-system-spawn-and-shell))
+</br>
+[参考资料](https://jiyou.github.io/blog/2018/04/28/mit.6.828/jos-lab3/](https://blog.csdn.net/a747979985/article/details/99551678)](https://www.epis2048.net/2021/6.828-lab5/))
